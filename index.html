@@ -6,6 +6,7 @@
     <title>Awnidnrdooiwds 个人聚合站</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
     <style>
         :root {
             --primary: #4f46e5;
@@ -55,7 +56,6 @@
             padding: 80px 0;
         }
         
-        /* 导航栏 */
         header {
             position: fixed;
             top: 0;
@@ -117,9 +117,10 @@
             display: flex;
             list-style: none;
             gap: 30px;
+            align-items: center;
         }
         
-        .nav-links a {
+        .nav-links a, .nav-links button {
             color: var(--dark);
             text-decoration: none;
             font-weight: 500;
@@ -127,9 +128,13 @@
             transition: var(--transition);
             padding: 5px 0;
             position: relative;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
         }
         
-        .nav-links a:hover {
+        .nav-links a:hover, .nav-links button:hover {
             color: var(--primary);
         }
         
@@ -155,7 +160,6 @@
             cursor: pointer;
         }
         
-        /* 主页区域 */
         .home {
             min-height: 100vh;
             display: flex;
@@ -196,7 +200,6 @@
             font-weight: 600;
         }
         
-        /* 病毒库快速访问区域 */
         .virus-quick-access {
             text-align: center;
             margin: 40px 0 60px;
@@ -226,7 +229,6 @@
             box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
         }
         
-        /* 游戏板块 */
         .games-section {
             background-color: white;
         }
@@ -372,7 +374,6 @@
             color: white;
         }
         
-        /* 游戏加载区域 */
         .game-container {
             display: none;
             position: fixed;
@@ -432,7 +433,6 @@
             border: none;
         }
         
-        /* B站主页区域 */
         .bilibili-section {
             background-color: white;
             border-radius: var(--radius);
@@ -530,7 +530,6 @@
             max-width: 500px;
         }
         
-        /* 资源分享区域 */
         .resources-section {
             background-color: #f8fafc;
         }
@@ -623,7 +622,6 @@
             text-decoration: underline;
         }
         
-        /* 关于区域 */
         .about {
             background-color: white;
         }
@@ -645,7 +643,6 @@
             font-weight: 700;
         }
         
-        /* 联系区域 */
         .contact {
             background-color: #f8fafc;
         }
@@ -669,6 +666,13 @@
         
         .form-group {
             margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
         }
         
         .form-control {
@@ -707,7 +711,12 @@
             box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
         }
         
-        /* 页脚 */
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
         footer {
             background-color: var(--dark);
             color: var(--light);
@@ -748,7 +757,6 @@
             color: var(--accent);
         }
         
-        /* 特殊功能区域 */
         .special-features {
             display: flex;
             justify-content: center;
@@ -780,6 +788,17 @@
             box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
         }
         
+        .admin-btn {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .admin-btn:hover {
+            background-color: var(--accent-light);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+        }
+        
         .trick-btn {
             background-color: var(--danger);
             color: white;
@@ -791,7 +810,6 @@
             box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
         }
         
-        /* 反馈状态提示 */
         .feedback-status {
             display: none;
             padding: 15px;
@@ -837,16 +855,10 @@
             position: relative;
         }
         
-        .submit-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-        
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         
-        /* 响应式设计 */
         @media (max-width: 992px) {
             .home h1 {
                 font-size: 2.8rem;
@@ -939,7 +951,6 @@
             }
         }
         
-        /* 动画 */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -964,7 +975,6 @@
             animation-delay: 0.4s;
         }
         
-        /* 工具类 */
         .text-center {
             text-align: center;
         }
@@ -976,10 +986,105 @@
         .mb-4 {
             margin-bottom: 2rem;
         }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 450px;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: var(--transition);
+        }
+        
+        .modal-close:hover {
+            color: var(--dark);
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: var(--gray-light);
+            color: var(--dark);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            background: var(--gray-light);
+            border-radius: 20px;
+        }
+        
+        .user-info span {
+            font-weight: 600;
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
-    <!-- 游戏加载容器 -->
     <div class="game-container" id="gameContainer">
         <div class="container">
             <div class="game-header">
@@ -994,7 +1099,6 @@
         </div>
     </div>
 
-    <!-- 导航栏 -->
     <header id="header">
         <div class="container">
             <nav>
@@ -1014,12 +1118,14 @@
                     <li><a href="#resources">资源</a></li>
                     <li><a href="#about">关于</a></li>
                     <li><a href="#contact">联系</a></li>
+                    <li id="authButtons">
+                        <button id="authBtn">登录 / 注册</button>
+                    </li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <!-- 主页区域 -->
     <section class="home" id="home">
         <div class="container">
             <div class="home-content">
@@ -1027,7 +1133,6 @@
                 <p class="animate delay-1">一个<span class="highlight">个人聚合空间</span>，汇集了我不同方面的兴趣、项目与创作。</p>
                 <a href="#games" class="btn animate delay-2">探索游戏 <i class="fas fa-gamepad"></i></a>
                 
-                <!-- 病毒库快速访问 -->
                 <div class="virus-quick-access animate delay-2">
                     <h3>🦠 病毒库快速访问</h3>
                     <a href="https://pan.moe/s/vYG3HK" target="_blank" class="virus-quick-btn">
@@ -1038,7 +1143,6 @@
         </div>
     </section>
 
-    <!-- 游戏板块 -->
     <section class="games-section" id="games">
         <div class="container">
             <div class="games-header">
@@ -1080,7 +1184,6 @@
         </div>
     </section>
 
-    <!-- B站主页区域 -->
     <section id="bilibili">
         <div class="container">
             <div class="bilibili-section animate">
@@ -1103,7 +1206,6 @@
         </div>
     </section>
 
-    <!-- 资源分享区域 -->
     <section class="resources-section" id="resources">
         <div class="container">
             <div class="resources-header">
@@ -1135,7 +1237,6 @@
         </div>
     </section>
 
-    <!-- 关于区域 -->
     <section class="about" id="about">
         <div class="container">
             <div class="about-content animate">
@@ -1147,24 +1248,17 @@
         </div>
     </section>
 
-    <!-- 联系区域 -->
     <section class="contact" id="contact">
         <div class="container">
             <div class="contact-container animate">
                 <h2 class="contact-title">联系与反馈</h2>
                 
-                <!-- 反馈状态提示 -->
                 <div class="feedback-status" id="feedbackStatus"></div>
                 
                 <form id="contactForm">
                     <div class="form-group">
-                        <label for="name">姓名 *</label>
-                        <input type="text" id="name" class="form-control" placeholder="请输入您的姓名" required>
-                        <small class="form-text">此姓名将作为数据记录的键，不能重复</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">邮箱 *</label>
-                        <input type="email" id="email" class="form-control" placeholder="请输入您的邮箱" required>
+                        <label>当前用户</label>
+                        <div id="userDisplay" class="form-control" style="background: var(--gray-light);">未登录，请先登录</div>
                     </div>
                     <div class="form-group">
                         <label for="message">留言内容 *</label>
@@ -1180,7 +1274,6 @@
         </div>
     </section>
 
-    <!-- 页脚 -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -1189,10 +1282,12 @@
                 <p class="credit">本网站由 <strong>deepseek</strong> 编写</p>
                 <p><a href="https://icp.gov.moe/?keyword=20269997" target="_blank" class="icp-link">萌ICP备20269997号</a></p>
                 
-                <!-- 特殊功能按钮 -->
                 <div class="special-features">
                     <a href="https://pan.moe/s/vYG3HK" target="_blank" class="feature-btn virus-btn">
                         <i class="fas fa-shield-virus"></i> 病毒库分享
+                    </a>
+                    <a href="https://dyz131005.github.io/admin/" target="_blank" class="feature-btn admin-btn">
+                        <i class="fas fa-cog"></i> 管理员后台
                     </a>
                     <a href="https://www.bilibili.com/video/BV1hq4y1s7VH/" target="_blank" class="feature-btn trick-btn">
                         <i class="fas fa-surprise"></i> 你被骗了
@@ -1202,25 +1297,69 @@
         </div>
     </footer>
 
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>账户</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="login">登录</button>
+                <button class="tab-btn" data-tab="register">注册</button>
+            </div>
+            <div class="tab-content active" id="loginTab">
+                <div class="feedback-status" id="loginStatus"></div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginUsername">用户名</label>
+                        <input type="text" id="loginUsername" class="form-control" placeholder="请输入用户名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">密码</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="请输入密码" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%;">登录</button>
+                </form>
+            </div>
+            <div class="tab-content" id="registerTab">
+                <div class="feedback-status" id="registerStatus"></div>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="regUsername">用户名</label>
+                        <input type="text" id="regUsername" class="form-control" placeholder="请输入用户名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regName">显示姓名</label>
+                        <input type="text" id="regName" class="form-control" placeholder="请输入显示姓名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">邮箱</label>
+                        <input type="email" id="regEmail" class="form-control" placeholder="请输入邮箱" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">密码</label>
+                        <input type="password" id="regPassword" class="form-control" placeholder="请输入密码" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%;">注册</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // 全局变量
-        
         const ENCODED_API_KEY = "V分2分p分K分c分0分1分H分R分k分l分W分b分W分x分Z分T分T分B分K分b分1分p分F分W分T分R分l分R分T分F分W分U分2分s分5分V分F分Z分U分V分l分p分V分M分n分h分G分Z分D分F分a分S分W分J分6分U分l分Z分i分S分E分E分w分V分l分V分V分M分W分E分y分U分l分h分a分R分V分Z分Z分T分U分Z分a分S分1分Z分X分e分G分9分X分R分0分5分W分V分W分x分K分U分0分1分F分c分G分F分Z分M分V分Z分3分U分l分U分x分c分k分9分U分U分m分x分i分V分G分x分Z分W分V分d分w分Y分V分N分X分T分n分V分X分b分X分R分U分V分l分h分o分a分F分l分V分V分l分d分X分b分E分5分W分Z分U分Z分k分U分m分J分H分a分D分N分a分R分V分J分h分V分0分d分W分W分F分R分U分S分l分V分h分e分m分x分o分V分F分R分C分U分1分Z分W分R分n分V分X分b分T分F分V分Y分m分x分a分R分F分R分s分V分m分t分k分Q分T分0分9";
-        
         const GITHUB_USERNAME = "dyz131005";
         const GITHUB_REPO = "dyz131005.github.io";
-        const DATA_FILE = "data.加密文件";
+        const ACCOUNTS_FILE = "accounts.yaml";
+        const MESSAGES_FILE = "messages.yaml";
         
-        // 解码Base64编码的API Key（三次编码，每个字符间有"分"字）
+        let currentUser = null;
+        
         function decodeApiKey() {
             try {
-                // 1. 去除所有的"分"字
                 const withoutFen = ENCODED_API_KEY.replace(/分/g, '');
-                // 2. 第一次解码
                 const firstDecode = atob(withoutFen);
-                // 3. 第二次解码
                 const secondDecode = atob(firstDecode);
-                // 4. 第三次解码
                 const thirdDecode = atob(secondDecode);
                 return thirdDecode;
             } catch (error) {
@@ -1229,7 +1368,194 @@
             }
         }
         
-        // 导航栏滚动效果
+        async function fetchYamlFile(filename) {
+            const apiKey = decodeApiKey();
+            if (!apiKey) throw new Error("API Key解码失败");
+            
+            const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${filename}`;
+            
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `token ${apiKey}`,
+                    'Accept': 'application/vnd.github.v3.raw'
+                }
+            });
+            
+            if (response.status === 404) return null;
+            if (!response.ok) throw new Error(`获取${filename}失败: ${response.status}`);
+            
+            return await response.text();
+        }
+        
+        async function saveYamlFile(filename, content, message = "更新文件") {
+            const apiKey = decodeApiKey();
+            if (!apiKey) throw new Error("API Key解码失败");
+            
+            const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${filename}`;
+            
+            let sha = null;
+            const existingResponse = await fetch(url, {
+                headers: {
+                    'Authorization': `token ${apiKey}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                cache: 'no-cache'
+            });
+            
+            if (existingResponse.ok) {
+                const data = await existingResponse.json();
+                sha = data.sha;
+            }
+            
+            const base64Content = btoa(unescape(encodeURIComponent(content)));
+            const requestBody = {
+                message: message,
+                content: base64Content
+            };
+            
+            if (sha) requestBody.sha = sha;
+            
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`保存${filename}失败: ${response.status} - ${errorText.substring(0, 100)}`);
+            }
+            
+            return true;
+        }
+        
+        async function loadAccounts() {
+            try {
+                const content = await fetchYamlFile(ACCOUNTS_FILE);
+                if (!content) return {};
+                return jsyaml.load(content) || {};
+            } catch (error) {
+                console.error("加载账户失败:", error);
+                return {};
+            }
+        }
+        
+        async function loadMessages() {
+            try {
+                const content = await fetchYamlFile(MESSAGES_FILE);
+                if (!content) return [];
+                return jsyaml.load(content) || [];
+            } catch (error) {
+                console.error("加载留言失败:", error);
+                return [];
+            }
+        }
+        
+        function showFeedbackStatus(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `feedback-status ${type}`;
+            element.style.display = 'block';
+        }
+        
+        async function registerUser(username, name, email, password) {
+            const accounts = await loadAccounts();
+            
+            if (accounts[username]) {
+                throw new Error("用户名已存在");
+            }
+            
+            accounts[username] = {
+                name: name,
+                email: email,
+                password: password,
+                createdAt: new Date().toISOString()
+            };
+            
+            const yamlContent = jsyaml.dump(accounts);
+            await saveYamlFile(ACCOUNTS_FILE, yamlContent, `新用户注册: ${username}`);
+            
+            return accounts[username];
+        }
+        
+        async function loginUser(username, password) {
+            const accounts = await loadAccounts();
+            
+            if (!accounts[username]) {
+                throw new Error("用户不存在");
+            }
+            
+            if (accounts[username].password !== password) {
+                throw new Error("密码错误");
+            }
+            
+            return accounts[username];
+        }
+        
+        async function submitMessage(message) {
+            if (!currentUser) {
+                throw new Error("请先登录");
+            }
+            
+            const messages = await loadMessages();
+            
+            const newMessage = {
+                id: Date.now(),
+                username: currentUser.username,
+                name: currentUser.name,
+                email: currentUser.email,
+                content: message,
+                createdAt: new Date().toISOString(),
+                replies: []
+            };
+            
+            messages.push(newMessage);
+            
+            const yamlContent = jsyaml.dump(messages);
+            await saveYamlFile(MESSAGES_FILE, yamlContent, `新留言: ${currentUser.username}`);
+            
+            return newMessage;
+        }
+        
+        function updateAuthUI() {
+            const authBtn = document.getElementById('authBtn');
+            const userDisplay = document.getElementById('userDisplay');
+            
+            if (currentUser) {
+                authBtn.textContent = '退出登录';
+                authBtn.onclick = logout;
+                userDisplay.innerHTML = `<strong>${currentUser.name}</strong> (${currentUser.email})`;
+                userDisplay.style.background = '#d1fae5';
+            } else {
+                authBtn.textContent = '登录 / 注册';
+                authBtn.onclick = openAuthModal;
+                userDisplay.textContent = '未登录，请先登录';
+                userDisplay.style.background = 'var(--gray-light)';
+            }
+        }
+        
+        function openAuthModal() {
+            document.getElementById('authModal').classList.add('active');
+        }
+        
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.remove('active');
+            document.getElementById('loginForm').reset();
+            document.getElementById('registerForm').reset();
+            document.getElementById('loginStatus').style.display = 'none';
+            document.getElementById('registerStatus').style.display = 'none';
+        }
+        
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            updateAuthUI();
+            showFeedbackStatus('feedbackStatus', '已退出登录', 'info');
+        }
+        
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
             if (window.scrollY > 50) {
@@ -1239,7 +1565,6 @@
             }
         });
         
-        // 移动端菜单切换
         const menuToggle = document.getElementById('menu-toggle');
         const navLinks = document.getElementById('nav-links');
         
@@ -1247,75 +1572,53 @@
             navLinks.classList.toggle('active');
         });
         
-        // 关闭移动端菜单当点击链接时
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', function() {
                 navLinks.classList.remove('active');
             });
         });
         
-        // 游戏相关功能
         const gameCards = document.querySelectorAll('.game-card[data-game]');
         const gameContainer = document.getElementById('gameContainer');
         const gameFrame = document.getElementById('gameFrame');
         const closeGameBtn = document.getElementById('closeGameBtn');
         const currentGameName = document.getElementById('currentGameName');
         
-        // 显示游戏容器
         function showGameContainer(gameName) {
-            if (gameName) {
-                currentGameName.textContent = gameName;
-            }
+            if (gameName) currentGameName.textContent = gameName;
             gameContainer.style.display = 'block';
             document.body.style.overflow = 'hidden';
         }
         
-        // 隐藏游戏容器
         function hideGameContainer() {
             gameContainer.style.display = 'none';
             document.body.style.overflow = 'auto';
             gameFrame.src = '';
         }
         
-        // 从GitHub获取游戏文件
         async function fetchGameFromGitHub(gameFile) {
             try {
-                // 解码API Key
                 const apiKey = decodeApiKey();
-                if (!apiKey) {
-                    throw new Error("API Key解码失败");
-                }
+                if (!apiKey) throw new Error("API Key解码失败");
                 
-                // 构建GitHub API URL
-                const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${gameFile}`;
-                
-                // 调用GitHub API
-                const response = await fetch(apiUrl, {
+                const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${gameFile}`;
+                const response = await fetch(url, {
                     headers: {
                         'Authorization': `token ${apiKey}`,
                         'Accept': 'application/vnd.github.v3.raw'
                     }
                 });
                 
-                if (!response.ok) {
-                    throw new Error(`GitHub API请求失败: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`GitHub API请求失败: ${response.status}`);
                 
-                // 获取HTML内容
                 const htmlContent = await response.text();
-                
-                // 创建一个Blob URL来加载HTML内容
                 const blob = new Blob([htmlContent], { type: 'text/html' });
                 const blobUrl = URL.createObjectURL(blob);
-                
-                // 设置iframe的src为Blob URL
                 gameFrame.src = blobUrl;
                 
                 return true;
             } catch (error) {
                 console.error("加载游戏时出错:", error);
-                
-                // 显示错误信息
                 gameFrame.srcdoc = `
                     <!DOCTYPE html>
                     <html>
@@ -1335,57 +1638,36 @@
                                 text-align: center;
                                 padding: 20px;
                             }
-                            .error-container {
-                                max-width: 500px;
-                            }
-                            h1 {
-                                font-size: 2rem;
-                                margin-bottom: 20px;
-                            }
-                            p {
-                                font-size: 1.2rem;
-                                margin-bottom: 20px;
-                            }
+                            .error-container { max-width: 500px; }
+                            h1 { font-size: 2rem; margin-bottom: 20px; }
                         </style>
                     </head>
                     <body>
                         <div class="error-container">
                             <h1>游戏加载失败</h1>
-                            <p>抱歉，无法从GitHub加载游戏文件。可能的原因：</p>
-                            <ul style="text-align: left; margin-bottom: 20px;">
-                                <li>游戏文件不存在</li>
-                                <li>API权限不足</li>
-                                <li>网络连接问题</li>
-                            </ul>
-                            <p>错误信息: ${error.message}</p>
+                            <p>抱歉，无法从GitHub加载游戏文件。</p>
+                            <p>错误: ${error.message}</p>
                         </div>
                     </body>
                     </html>
                 `;
-                
                 return false;
             }
         }
         
-        // 为游戏卡片添加点击事件
         gameCards.forEach(card => {
             const playBtn = card.querySelector('.game-play-btn');
             const gameName = card.querySelector('.game-name').textContent;
             const gameFile = card.getAttribute('data-file');
-            const externalLink = card.getAttribute('data-external');
             
-            // 如果是贪吃蛇游戏
-            if (playBtn && !playBtn.disabled && gameFile) {
+            if (playBtn && gameFile) {
                 playBtn.addEventListener('click', async function() {
                     showGameContainer(gameName);
                     await fetchGameFromGitHub(gameFile);
                 });
-            }
-            
-            // 整个卡片也可点击（除了按钮区域）
-            if (gameFile) {
+                
                 card.addEventListener('click', function(e) {
-                    if (!e.target.classList.contains('game-play-btn') && !playBtn.disabled) {
+                    if (!e.target.classList.contains('game-play-btn')) {
                         showGameContainer(gameName);
                         fetchGameFromGitHub(gameFile);
                     }
@@ -1393,20 +1675,13 @@
             }
         });
         
-        // 关闭游戏按钮事件
         closeGameBtn.addEventListener('click', hideGameContainer);
-        
-        // ESC键关闭游戏
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && gameContainer.style.display === 'block') {
-                hideGameContainer();
-            }
+            if (e.key === 'Escape' && gameContainer.style.display === 'block') hideGameContainer();
         });
         
-        // 滚动动画
         function checkScroll() {
             const elements = document.querySelectorAll('.animate');
-            
             elements.forEach(element => {
                 const elementTop = element.getBoundingClientRect().top;
                 const windowHeight = window.innerHeight;
@@ -1421,363 +1696,114 @@
         window.addEventListener('scroll', checkScroll);
         window.addEventListener('load', checkScroll);
         
-        // ==================== 反馈功能实现 ====================
+        document.getElementById('authBtn').addEventListener('click', openAuthModal);
+        document.getElementById('closeModal').addEventListener('click', closeAuthModal);
+        document.getElementById('authModal').addEventListener('click', function(e) {
+            if (e.target === this) closeAuthModal();
+        });
         
-        // 显示反馈状态
-        function showFeedbackStatus(message, type = 'info') {
-            const statusElement = document.getElementById('feedbackStatus');
-            statusElement.textContent = message;
-            statusElement.className = `feedback-status ${type}`;
-            statusElement.style.display = 'block';
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(this.dataset.tab + 'Tab').classList.add('active');
+            });
+        });
+        
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
             
-            // 5秒后自动隐藏
-            if (type !== 'info') {
-                setTimeout(() => {
-                    statusElement.style.display = 'none';
-                }, 5000);
-            }
-        }
-        
-        // 检查数据文件中是否存在指定键
-        async function checkKeyExists(name) {
-            const apiKey = decodeApiKey();
-            if (!apiKey) {
-                throw new Error("API Key解码失败");
-            }
+            showFeedbackStatus('loginStatus', '登录中...', 'info');
             
             try {
-                console.log(`检查姓名是否存在: "${name}"`);
-                
-                // 获取数据文件内容
-                const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${DATA_FILE}`;
-                const response = await fetch(apiUrl, {
-                    headers: {
-                        'Authorization': `token ${apiKey}`,
-                        'Accept': 'application/vnd.github.v3.raw'  // 注意：使用 raw 格式获取原始内容
-                    }
-                });
-                
-                console.log("检查文件状态:", response.status);
-                
-                if (response.status === 404) {
-                    // 文件不存在，表示键也不存在
-                    console.log("文件不存在，姓名可用");
-                    return false;
-                }
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error("获取数据文件失败:", response.status, errorText);
-                    throw new Error(`获取数据文件失败: ${response.status} ${response.statusText}`);
-                }
-                
-                // 获取文件内容（GitHub API raw格式直接返回文本）
-                const content = await response.text();
-                console.log("文件内容长度:", content.length);
-                
-                if (!content || content.trim() === '') {
-                    console.log("文件为空，姓名可用");
-                    return false;
-                }
-                
-                // 解析内容，检查是否存在指定姓名
-                // 格式示例：[键 : "姓名" ; 值 : "小三"][键 : "邮箱" ; 值 : "xxx@xx.com"]...
-                const lines = content.split('\n').filter(line => line.trim());
-                
-                console.log(`文件共有 ${lines.length} 行记录`);
-                
-                for (const line of lines) {
-                    // 使用正则表达式匹配每行中的所有键值对
-                    // 每行可能有多个 [键 : "xxx" ; 值 : "yyy"] 组
-                    const matches = line.matchAll(/\[键 : "([^"]+)" ; 值 : "([^"]+)"\]/g);
-                    
-                    let currentName = null;
-                    
-                    for (const match of matches) {
-                        const key = match[1];
-                        const value = match[2];
-                        
-                        // 如果是"姓名"键，保存当前记录的姓名
-                        if (key === "姓名") {
-                            currentName = value;
-                        }
-                        
-                        // 如果找到姓名匹配，返回true
-                        if (currentName === name) {
-                            console.log(`找到重复姓名: "${name}"`);
-                            return true;
-                        }
-                    }
-                }
-                
-                console.log(`姓名 "${name}" 可用`);
-                return false; // 未找到相同姓名的记录
-                
+                const user = await loginUser(username, password);
+                currentUser = { ...user, username: username };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                updateAuthUI();
+                closeAuthModal();
+                showFeedbackStatus('feedbackStatus', '登录成功！', 'success');
             } catch (error) {
-                console.error("检查键是否存在时出错:", error);
-                
-                // 如果是网络错误或权限错误，重新抛出
-                if (error.message.includes('401') || error.message.includes('403') || 
-                    error.message.includes('Failed to fetch')) {
-                    throw error;
-                }
-                
-                // 对于解析错误等，默认返回false（允许提交）
-                console.warn("解析文件时出错，默认允许提交");
-                return false;
+                showFeedbackStatus('loginStatus', error.message, 'error');
             }
-        }
+        });
         
-        
-        // 向数据文件添加新记录 - 重构稳定版
-        async function addDataToFile(name, email, message) {
-            const apiKey = decodeApiKey();
-            if (!apiKey) {
-                throw new Error("API Key解码失败");
-            }
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('regUsername').value.trim();
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
             
-            const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${DATA_FILE}`;
-            
-            console.log(`=== 开始提交反馈：${name} ===`);
+            showFeedbackStatus('registerStatus', '注册中...', 'info');
             
             try {
-                // ====== 第一步：获取文件当前状态（稳健获取 sha 和内容）====== 
-                let sha = null;
-                let existingContent = "";
-                
-                // 1. 首先，尝试最可靠的 raw 请求获取文件内容
-                try {
-                    console.log("[1] 尝试通过 raw 接口获取文件内容...");
-                    const rawResponse = await fetch(apiUrl, {
-                        headers: {
-                            'Authorization': `token ${apiKey}`,
-                            'Accept': 'application/vnd.github.v3.raw'
-                        }
-                    });
-                    
-                    if (rawResponse.ok) {
-                        existingContent = await rawResponse.text();
-                        console.log(`   ✓ 成功获取内容，长度: ${existingContent.length} 字符`);
-                        
-                        // 2. 成功获取内容后，再专门获取 sha (JSON接口)
-                        console.log("[2] 获取文件 SHA...");
-                        const jsonResponse = await fetch(apiUrl, {
-                            headers: {
-                                'Authorization': `token ${apiKey}`,
-                                'Accept': 'application/vnd.github.v3+json'
-                            }
-                        });
-                        
-                        if (jsonResponse.ok) {
-                            const responseText = await jsonResponse.text();
-                            if (responseText && responseText.trim() !== '') {
-                                try {
-                                    const data = JSON.parse(responseText);
-                                    if (data && data.sha) {
-                                        sha = data.sha;
-                                        console.log(`   ✓ 获取 SHA 成功: ${sha.substring(0, 15)}...`);
-                                    } else {
-                                        console.warn("   ! JSON 响应中未找到 sha 字段");
-                                    }
-                                } catch (parseErr) {
-                                    console.warn("   ! 解析 SHA 响应失败，将尝试无 SHA 更新:", parseErr.message);
-                                }
-                            }
-                        } else if (jsonResponse.status === 404) {
-                            console.log("   ! JSON 接口返回 404，但 raw 接口成功，可能是缓存或权限问题。继续处理...");
-                        } else {
-                            console.warn(`   ! 获取 SHA 失败 (状态: ${jsonResponse.status})，将尝试无 SHA 更新`);
-                        }
-                    } else if (rawResponse.status === 404) {
-                        console.log("   ✓ 文件不存在（这是首次创建）");
-                        // 文件不存在，sha 为 null，existingContent 为空
-                    } else {
-                        // raw 请求失败且不是 404
-                        const errorText = await rawResponse.text().catch(() => '');
-                        throw new Error(`获取文件失败 (RAW): ${rawResponse.status} - ${errorText.substring(0, 100)}`);
-                    }
-                } catch (step1Error) {
-                    console.error("第一步（获取文件状态）出错:", step1Error.message);
-                    // 不立即抛出，尝试继续进行（可能文件不存在）
-                }
-                
-                // ====== 第二步：构建新内容 ====== 
-                console.log("[3] 构建新记录...");
-                const timestamp = new Date().toISOString();
-                // 转义引号和换行符，确保格式正确
-                const escapedMessage = message.replace(/"/g, '\\"').replace(/\n/g, '\\n');
-                const newRecord = `[键 : "姓名" ; 值 : "${name}"][键 : "邮箱" ; 值 : "${email}"][键 : "留言" ; 值 : "${escapedMessage}"][键 : "时间" ; 值 : "${timestamp}"]`;
-                
-                // 组装完整内容
-                let newContent = existingContent || "";
-                if (newContent && !newContent.endsWith('\n')) {
-                    newContent += '\n';
-                }
-                newContent += newRecord;
-                
-                console.log(`   新内容总长度: ${newContent.length} 字符`);
-                
-                // ====== 第三步：Base64 编码 ====== 
-                console.log("[4] Base64 编码内容...");
-                let base64Content;
-                try {
-                    // 处理中文字符的可靠编码方式
-                    base64Content = btoa(unescape(encodeURIComponent(newContent)));
-                } catch (encodeError) {
-                    console.error("编码失败，使用备用方案:", encodeError);
-                    base64Content = btoa(newContent);
-                }
-                
-                // ====== 第四步：准备并发送更新请求 ====== 
-                console.log("[5] 准备提交到 GitHub...");
-                const requestBody = {
-                    message: `网站反馈: ${name} (${new Date().toLocaleDateString()})`,
-                    content: base64Content
-                };
-                
-                // 只有确定有 sha 时才添加，否则让 GitHub 决定是创建还是更新
-                if (sha) {
-                    requestBody.sha = sha;
-                    console.log(`   使用 SHA: ${sha.substring(0, 15)}...`);
-                } else {
-                    console.log("   未提供 SHA，GitHub 将自动处理（创建或更新）");
-                }
-                
-                const updateResponse = await fetch(apiUrl, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${apiKey}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json',
-                        'User-Agent': 'Awnidnrdooiwds-Personal-Site/1.0'
-                    },
-                    body: JSON.stringify(requestBody)
-                });
-                
-                console.log(`[6] GitHub 响应状态: ${updateResponse.status} ${updateResponse.statusText}`);
-                
-                // ====== 第五步：处理响应 ====== 
-                if (updateResponse.ok) {
-                    console.log("   ✅ 提交成功！");
-                    try {
-                        const resultText = await updateResponse.text();
-                        if (resultText) {
-                            const result = JSON.parse(resultText);
-                            console.log(`   提交 SHA: ${result.commit?.sha?.substring(0, 15)}...`);
-                        }
-                    } catch (e) {
-                        // 即使解析响应失败，只要状态码是成功的，就认为操作成功
-                        console.log("   ✅ 提交成功（响应解析略过）");
-                    }
-                    return true;
-                } else {
-                    // 处理错误响应
-                    let errorMessage = `GitHub 返回错误: ${updateResponse.status}`;
-                    let errorDetails = '';
-                    
-                    try {
-                        const errorText = await updateResponse.text();
-                        if (errorText) {
-                            errorDetails = errorText.substring(0, 200);
-                            try {
-                                const errorJson = JSON.parse(errorText);
-                                if (errorJson.message) {
-                                    errorMessage += ` - ${errorJson.message}`;
-                                }
-                            } catch (e) {
-                                errorMessage += ` - ${errorDetails}`;
-                            }
-                        }
-                    } catch (textError) {
-                        errorMessage += ` (无法读取错误详情)`;
-                    }
-                    
-                    // 根据常见状态码提供友好提示
-                    if (updateResponse.status === 422) {
-                        if (errorMessage.includes('sha') || errorMessage.includes('SHA')) {
-                            errorMessage = '提交冲突：文件可能已被其他操作修改。请刷新页面后重试。';
-                        } else {
-                            errorMessage = '数据验证失败，请检查输入内容后重试。';
-                        }
-                    } else if (updateResponse.status === 409) {
-                        errorMessage = '提交冲突：文件正在被其他进程修改，请稍后重试。';
-                    } else if (updateResponse.status === 403) {
-                        errorMessage = '权限不足：Token 可能已过期或无权写入。';
-                    }
-                    
-                    throw new Error(errorMessage);
-                }
-                
+                const user = await registerUser(username, name, email, password);
+                currentUser = { ...user, username: username };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                updateAuthUI();
+                closeAuthModal();
+                showFeedbackStatus('feedbackStatus', '注册成功！', 'success');
             } catch (error) {
-                console.error("❌ 提交过程出错:", error);
-                // 重新抛出错误，由上层统一处理
-                throw error;
+                showFeedbackStatus('registerStatus', error.message, 'error');
             }
-        }
+        });
         
-        // 表单提交处理
         document.getElementById('contactForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // 获取表单数据
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const message = document.getElementById('message').value.trim();
-            
-            // 验证数据
-            if (!name || !email || !message) {
-                showFeedbackStatus('请填写所有必填字段', 'error');
+            if (!currentUser) {
+                showFeedbackStatus('feedbackStatus', '请先登录！', 'error');
+                openAuthModal();
                 return;
             }
             
-            // 禁用提交按钮，显示加载状态
+            const message = document.getElementById('message').value.trim();
+            
+            if (!message) {
+                showFeedbackStatus('feedbackStatus', '请输入留言内容！', 'error');
+                return;
+            }
+            
             const submitBtn = document.getElementById('submitBtn');
             const originalText = submitBtn.innerHTML;
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="loading-small"></span>处理中...';
             
-            showFeedbackStatus('正在检查姓名是否已存在...', 'info');
+            showFeedbackStatus('feedbackStatus', '正在提交...', 'info');
             
             try {
-                // 检查姓名是否已存在
-                const exists = await checkKeyExists(name);
-                
-                if (exists) {
-                    showFeedbackStatus(`姓名 "${name}" 已存在，请使用其他姓名`, 'error');
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalText;
-                    return;
-                }
-                
-                showFeedbackStatus('姓名验证通过，正在提交数据...', 'info');
-                
-                // 添加数据到文件
-                await addDataToFile(name, email, message);
-                
-                // 成功反馈
-                showFeedbackStatus('反馈提交成功！您的数据已保存。', 'success');
-                
-                // 重置表单
-                this.reset();
-                
+                await submitMessage(message);
+                showFeedbackStatus('feedbackStatus', '提交成功！', 'success');
+                document.getElementById('message').value = '';
             } catch (error) {
-                console.error("提交反馈时出错:", error);
-                showFeedbackStatus(`提交失败: ${error.message}`, 'error');
+                console.error("提交留言时出错:", error);
+                showFeedbackStatus('feedbackStatus', `提交失败: ${error.message}`, 'error');
             } finally {
-                // 恢复提交按钮
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
             }
         });
         
-        // 初始化检查
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            try {
+                currentUser = JSON.parse(savedUser);
+                updateAuthUI();
+            } catch (e) {
+                localStorage.removeItem('currentUser');
+            }
+        }
+        
         checkScroll();
         
-        // 控制台彩蛋
         console.log("🎮 游戏中心已精简，保留贪吃蛇和MC.JS");
         console.log("🦠 病毒库分享按钮已移至主页靠上位置");
         console.log("📦 新增资源分享板块：B站资源和优质软件");
-        console.log("你不会以为这些都是我肝出来的吧😄，其实是AI写的，但是也挺头疼的，就比如token...哎！");
+        console.log("👤 用户注册/登录功能已启用");
+        console.log("📝 留言系统已改用YAML格式存储");
     </script>
 </body>
 </html>
