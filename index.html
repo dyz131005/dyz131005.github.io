@@ -533,6 +533,80 @@
             font-size: 1.1rem;
             max-width: 500px;
         }
+
+        .featured-videos {
+            margin-top: 50px;
+        }
+
+        .featured-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--gray-light);
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .video-player {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: #000;
+        }
+
+        .video-player iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-info {
+            padding: 20px;
+        }
+
+        .video-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .video-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #fb7299;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .video-link:hover {
+            color: #00aeec;
+        }
         
         .resources-section {
             background-color: #f8fafc;
@@ -913,7 +987,7 @@
                 padding: 30px 20px;
             }
             
-            .games-grid, .resources-grid {
+            .games-grid, .resources-grid, .videos-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -1108,7 +1182,7 @@
             <nav>
                 <a href="#" class="logo-container">
                     <div class="avatar">
-                        <img src="https://i0.hdslb.com/bfs/face/bfdd2e963415d6a9176f01cf27270db2bcae7658.jpg@120w_120h_1c.avif" alt="B站头像">
+                        <img src="https://img.remit.ee/api/file/CAACAgUAAyEGAASHRsPbAAEYDv1qaHogxvwjHRlZ_mjurPLG6gduFwAC-y0AAqj4SVcN_t7LXnAWiz0E.webp" alt="B站头像">
                     </div>
                     <div class="logo-text">Awnidnrdooiwds</div>
                 </a>
@@ -1213,12 +1287,53 @@
                 </div>
                 <div class="bilibili-content">
                     <div class="bilibili-avatar">
-                        <img src="https://i0.hdslb.com/bfs/face/bfdd2e963415d6a9176f01cf27270db2bcae7658.jpg@120w_120h_1c.avif" alt="B站头像">
+                        <img src="https://img.remit.ee/api/file/CAACAgUAAyEGAASHRsPbAAEYDv1qaHogxvwjHRlZ_mjurPLG6gduFwAC-y0AAqj4SVcN_t7LXnAWiz0E.webp" alt="B站头像">
                     </div>
                     <p class="bilibili-desc">这是我的B站个人主页，欢迎关注我的最新动态和视频作品！</p>
                     <a href="https://space.bilibili.com/3546716410218699" target="_blank" class="bilibili-link">
                         <i class="fab fa-bilibili"></i> 访问我的B站主页
                     </a>
+                </div>
+
+                <div class="featured-videos">
+                    <h3 class="featured-title">🏆 代表作</h3>
+                    <div class="videos-grid">
+                        <div class="video-card animate">
+                            <div class="video-player">
+                                <iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115840854790431&bvid=BV1rnixBhEds&cid=25940530576&p=1&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+                            </div>
+                            <div class="video-info">
+                                <h4 class="video-title">测试蜜雪冰城病毒</h4>
+                                <a href="https://www.bilibili.com/video/BV1rnixBhEds" target="_blank" class="video-link">
+                                    <i class="fas fa-external-link-alt"></i> 跳转原视频
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="video-card animate delay-1">
+                            <div class="video-player">
+                                <iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115608490348869&bvid=BV1sVUmBfEbm&cid=25916544778&p=1&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+                            </div>
+                            <div class="video-info">
+                                <h4 class="video-title">⚡️安装流氓软件后再运行氨醛更新？？⚡️</h4>
+                                <a href="https://www.bilibili.com/video/BV1sVUmBfEbm" target="_blank" class="video-link">
+                                    <i class="fas fa-external-link-alt"></i> 跳转原视频
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="video-card animate delay-2">
+                            <div class="video-player">
+                                <iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115818994078823&bvid=BV1fBvUBWEQb&cid=25938239369&p=1&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+                            </div>
+                            <div class="video-info">
+                                <h4 class="video-title">⚡️全B站科技区可能只有我这么大胆！！⚡️</h4>
+                                <a href="https://www.bilibili.com/video/BV1fBvUBWEQb" target="_blank" class="video-link">
+                                    <i class="fas fa-external-link-alt"></i> 跳转原视频
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1817,11 +1932,7 @@
         
         checkScroll();
         
-        console.log("🎮 游戏中心已精简，保留贪吃蛇和MC.JS");
-        console.log("🦠 病毒库分享按钮已移至主页靠上位置");
-        console.log("📦 新增资源分享板块：B站资源和优质软件");
-        console.log("👤 用户注册/登录功能已启用");
-        console.log("📝 留言系统已改用YAML格式存储");
+
     </script>
 </body>
 </html>
