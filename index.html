@@ -1065,7 +1065,78 @@
             margin-bottom: 2rem;
         }
         
-        .modal {
+        .announcement-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 2500;
+            overflow: hidden;
+        }
+
+        .announcement-header {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: var(--shadow);
+            z-index: 10;
+        }
+
+        .announcement-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .announcement-back:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .announcement-header h2 {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin: 0;
+        }
+
+        .announcement-body {
+            width: 100%;
+            height: calc(100% - 65px);
+            overflow: auto;
+            padding: 30px 40px;
+            background-color: #fafafa;
+        }
+
+        .announcement-text {
+            margin: 0;
+            white-space: pre;
+            font-family: 'Inter', 'Microsoft YaHei', monospace, sans-serif;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--dark);
+            min-width: 100%;
+        }
+
+
+        .modal {        .modal {
             display: none;
             position: fixed;
             top: 0;
@@ -1177,7 +1248,20 @@
         </div>
     </div>
 
-    <header id="header">
+    <div class="announcement-container" id="announcementContainer">
+        <div class="announcement-header">
+            <button class="announcement-back" id="announcementBackBtn">
+                <i class="fas fa-arrow-left"></i> 返回
+            </button>
+            <h2><i class="fas fa-bullhorn"></i> 公告</h2>
+        </div>
+        <div class="announcement-body" id="announcementBody">
+            <pre class="announcement-text" id="announcementText">加载中...</pre>
+        </div>
+    </div>
+
+
+    <header id="header">    <header id="header">
         <div class="container">
             <nav>
                 <a href="#" class="logo-container">
@@ -1190,6 +1274,8 @@
                     <i class="fas fa-bars"></i>
                 </div>
                 <ul class="nav-links" id="nav-links">
+                    <li><button id="announcementBtn"><i class="fas fa-bullhorn"></i> 公告</button></li>
+                    <li><a href="#home">主页</a></li>                <ul class="nav-links" id="nav-links">
                     <li><a href="#home">主页</a></li>
                     <li><a href="#games">游戏</a></li>
                     <li><a href="#bilibili">B站</a></li>
@@ -1517,10 +1603,19 @@
             if (response.status === 404) return null;
             if (!response.ok) throw new Error(`获取${filename}失败: ${response.status}`);
             
+            // GitHub 对部分文件会直接返回 raw 文本（Content-Type: vnd.github.v3.raw），需双形态兼容
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('raw')) {
+                const rawText = await response.text();
+                return rawText;
+            }
+
             const data = await response.json();
             
             if (data.encoding === 'base64' && data.content) {
-                const decoded = atob(data.content.replace(/\n/g, ''));
+                const binary = atob(data.content.replace(/\n/g, ''));
+                const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+                const decoded = new TextDecoder().decode(bytes);
                 return decoded;
             }
             
@@ -1847,7 +1942,63 @@
         window.addEventListener('scroll', checkScroll);
         window.addEventListener('load', checkScroll);
         
-        document.getElementById('authBtn').addEventListener('click', openAuthModal);
+        // ===== 公告 =====
+        async function fetchAnnouncement() {
+            const apiKey = decodeApiKey();
+            if (!apiKey) throw new Error("API Key解码失败");
+            const fileName = encodeURIComponent('公告.txt');
+            const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${fileName}`;
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `token ${apiKey}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            if (response.status === 404) return null;
+            if (!response.ok) throw new Error(`获取公告失败: ${response.status}`);
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('raw')) {
+                return await response.text();
+            }
+            const data = await response.json();
+            if (data.encoding === 'base64' && data.content) {
+                const binary = atob(data.content.replace(/\n/g, ''));
+                const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+                return new TextDecoder().decode(bytes);
+            }
+            if (data.download_url) {
+                const rawResponse = await fetch(data.download_url, {
+                    headers: { 'Authorization': `token ${apiKey}` }
+                });
+                if (rawResponse.ok) return await rawResponse.text();
+            }
+            throw new Error("无法解析公告内容");
+        }
+
+        async function openAnnouncement() {
+            const container = document.getElementById('announcementContainer');
+            const textEl = document.getElementById('announcementText');
+            container.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            textEl.textContent = '加载中...';
+            try {
+                const text = await fetchAnnouncement();
+                textEl.textContent = (text === null || text === undefined) ? '（暂无公告，请先创建公告.txt）' : text;
+            } catch (error) {
+                textEl.textContent = '加载公告失败: ' + error.message;
+            }
+        }
+
+        function closeAnnouncement() {
+            document.getElementById('announcementContainer').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('announcementBtn').addEventListener('click', openAnnouncement);
+        document.getElementById('announcementBackBtn').addEventListener('click', closeAnnouncement);
+
+
+        document.getElementById('authBtn').addEventListener('click', openAuthModal);        document.getElementById('authBtn').addEventListener('click', openAuthModal);
         document.getElementById('closeModal').addEventListener('click', closeAuthModal);
         document.getElementById('authModal').addEventListener('click', function(e) {
             if (e.target === this) closeAuthModal();
