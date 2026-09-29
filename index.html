@@ -1136,7 +1136,7 @@
         }
 
 
-        .modal {        .modal {
+        .modal {
             display: none;
             position: fixed;
             top: 0;
@@ -1261,7 +1261,7 @@
     </div>
 
 
-    <header id="header">    <header id="header">
+    <header id="header">
         <div class="container">
             <nav>
                 <a href="#" class="logo-container">
@@ -1275,7 +1275,6 @@
                 </div>
                 <ul class="nav-links" id="nav-links">
                     <li><button id="announcementBtn"><i class="fas fa-bullhorn"></i> 公告</button></li>
-                    <li><a href="#home">主页</a></li>                <ul class="nav-links" id="nav-links">
                     <li><a href="#home">主页</a></li>
                     <li><a href="#games">游戏</a></li>
                     <li><a href="#bilibili">B站</a></li>
@@ -1998,7 +1997,7 @@
         document.getElementById('announcementBackBtn').addEventListener('click', closeAnnouncement);
 
 
-        document.getElementById('authBtn').addEventListener('click', openAuthModal);        document.getElementById('authBtn').addEventListener('click', openAuthModal);
+        document.getElementById('authBtn').addEventListener('click', openAuthModal);
         document.getElementById('closeModal').addEventListener('click', closeAuthModal);
         document.getElementById('authModal').addEventListener('click', function(e) {
             if (e.target === this) closeAuthModal();
