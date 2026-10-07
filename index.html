@@ -835,6 +835,51 @@
             color: var(--accent);
         }
         
+        .friend-links {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+        
+        .friend-links h4 {
+            font-size: 1rem;
+            color: white;
+            margin-bottom: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .friend-link-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px 30px;
+        }
+        
+        .friend-link-item {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+        
+        .friend-link-item a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .friend-link-item a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        .friend-link-url {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            word-break: break-all;
+        }
+        
         .special-features {
             display: flex;
             justify-content: center;
@@ -1280,6 +1325,7 @@
                     <li><a href="#bilibili">B站</a></li>
                     <li><a href="#resources">资源</a></li>
                     <li><a href="https://dyz131005.github.io/drive/" target="_blank">网盘</a></li>
+                    <li><a href="https://dyz131005.github.io/BanJiu-Video/" target="_blank">斑鸠视频</a></li>
                     <li><a href="#about">关于</a></li>
                     <li><a href="#contact">联系</a></li>
                     <li id="authButtons">
@@ -1497,6 +1543,20 @@
             <div class="footer-content">
                 <div class="footer-logo">Awnidnrdooiwds</div>
                 <p class="copyright">dyz版权所有 © 2023 Awnidnrdooiwds个人聚合站</p>
+                
+                <div class="friend-links">
+                    <h4>友情链接</h4>
+                    <div class="friend-link-list">
+                        <div class="friend-link-item">
+                            <a href="https://dyz131005.github.io/drive/" target="_blank">Awnidnrdooiwds网盘</a>
+                            <span class="friend-link-url">https://dyz131005.github.io/drive/</span>
+                        </div>
+                        <div class="friend-link-item">
+                            <a href="https://dyz131005.github.io/BanJiu-Video/" target="_blank">斑鸠视频</a>
+                            <span class="friend-link-url">https://dyz131005.github.io/BanJiu-Video/</span>
+                        </div>
+                    </div>
+                </div>
                 <p class="credit">本网站由 <strong>deepseek</strong> 编写</p>
                 <p><a href="https://icp.gov.moe/?keyword=20269997" target="_blank" class="icp-link">萌ICP备20269997号</a></p>
                 
