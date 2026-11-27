@@ -11,4 +11,6 @@
   email: Wrd@wrd.com
   content: 可以吗
   createdAt: '2026-11-27T09:59:51.617Z'
-  replies: []
+  replies:
+    - content: 可以
+      createdAt: '2026-11-27T10:00:56.811Z'
